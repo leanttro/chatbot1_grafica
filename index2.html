@@ -14,8 +14,8 @@
             theme: {
                 extend: {
                     colors: {
-                        'elo-dark': '#4c0507',
-                        'elo-red': '#aa1e1e',
+                        'elo-dark': '#242966',
+                        'elo-red': '#242966',
                         'elo-bg': '#f9f9f9',
                         'elo-gold': '#FFD700',
                     }
@@ -98,7 +98,7 @@
             display: block;
         }
         .mobile-scroll-menu::-webkit-scrollbar-track {
-            background: #4c0507;
+            background: #242966;
         }
         .mobile-scroll-menu::-webkit-scrollbar-thumb {
             background: #FFD700;
@@ -106,7 +106,7 @@
         }
 
         .mobile-scroll-menu {
-            scrollbar-color: #FFD700 #4c0507;
+            scrollbar-color: #FFD700 #242966;
             scrollbar-width: thin;
         }
 
@@ -129,7 +129,7 @@
             --bg-color: #FFFFFF; /* Fundo principal: Branco */
             --dark-gray: #f4f4f4; /* Fundo do chat: Cinza claro */
             --text-color: #333333; /* Texto principal: Preto escuro */
-            --accent-color: #aa1e1e; /* Destaque: Vinho [SUA GRÁFICA] */
+            --accent-color: #242966; /* Destaque: Azul [SUA GRÁFICA] */
             --wrong-color: #dc3545;
             --font-body: 'Inter', sans-serif;
             --font-heading: 'Montserrat', sans-serif;
@@ -157,11 +157,11 @@
         .chatbot-preview-button {
             width: 100%;
             background-color: var(--dark-gray); 
-            border: 1px solid rgba(170, 30, 30, 0.3);
+            border: 1px solid rgba(36, 41, 102, 0.3);
             border-radius: 12px;
             padding: 1rem;
             cursor: pointer;
-            box-shadow: 0 8px 25px rgba(170, 30, 30, 0.4);
+            box-shadow: 0 8px 25px rgba(36, 41, 102, 0.4);
             transition: all 0.3s ease;
             animation: pulse 2s infinite;
             opacity: 1;
@@ -171,7 +171,7 @@
 
         .chatbot-preview-button:hover {
             transform: scale(1.03);
-            box-shadow: 0 12px 35px rgba(170, 30, 30, 0.6);
+            box-shadow: 0 12px 35px rgba(36, 41, 102, 0.6);
         }
         
         /* ESTADO: ATIVO (Quando a Janela Principal está aberta) */
@@ -201,9 +201,9 @@
         .chatbot-minimized-icon {
             width: 60px;
             height: 60px;
-            background: var(--accent-color); /* Vinho */
+            background: var(--accent-color); /* Azul */
             border-radius: 50%;
-            box-shadow: 0 8px 25px rgba(170, 30, 30, 0.4);
+            box-shadow: 0 8px 25px rgba(36, 41, 102, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -282,7 +282,7 @@
         }
 
         .preview-message-bubble {
-            background-color: rgba(170, 30, 30, 0.1);
+            background-color: rgba(36, 41, 102, 0.1);
             border-left: 3px solid var(--accent-color);
             padding: 0.8rem 1rem;
             border-radius: 8px;
@@ -297,10 +297,10 @@
         
         @keyframes pulse {
             0%, 100% {
-                box-shadow: 0 8px 25px rgba(170, 30, 30, 0.4);
+                box-shadow: 0 8px 25px rgba(36, 41, 102, 0.4);
             }
             50% {
-                box-shadow: 0 8px 35px rgba(170, 30, 30, 0.7);
+                box-shadow: 0 8px 35px rgba(36, 41, 102, 0.7);
             }
         }
 
@@ -315,7 +315,7 @@
             height: 70vh;
             max-height: 550px;
             background-color: var(--dark-gray);
-            border: 1px solid rgba(170, 30, 30, 0.3);
+            border: 1px solid rgba(36, 41, 102, 0.3);
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             display: none;
@@ -334,7 +334,7 @@
         }
 
         .chatbot-header {
-            background: linear-gradient(135deg, var(--accent-color), #8a1717);
+            background: linear-gradient(135deg, var(--accent-color), #1a1d4a);
             padding: 1.2rem 1.5rem;
             display: flex;
             align-items: center;
@@ -571,7 +571,7 @@
 
         .chatbot-send:hover {
             transform: scale(1.05);
-            background-color: #8a1717;
+            background-color: #1a1d4a;
         }
 
         .chatbot-send:disabled {
@@ -618,20 +618,20 @@
                 </div>
 
                 <div class="flex flex-col items-center justify-center text-xs font-medium space-y-1 lg:hidden ml-2">
-                    <span class="flex items-center gap-1"><i class="fas fa-phone text-sm"></i> 11 2262-9800</span>
-                    <span class="flex items-center gap-1">elobrindes@elobrindes.com.br</span>
+                    <span class="flex items-center gap-1"><i class="fas fa-phone text-sm"></i> [seu numero]</span>
+                    <span class="flex items-center gap-1">seuemail@seuemail.com.br</span>
                 </div>
 
                 <div class="hidden md:flex flex-1 justify-start px-2 ml-0"> 
                     <div class="relative w-full max-w-sm">
-                        <input type="text" placeholder="Buscar brindes..." class="w-full bg-white text-gray-900 rounded-full py-3 px-6 pr-16 outline-none text-lg">
+                        <input type="text" placeholder="Buscar produtos.." class="w-full bg-white text-gray-900 rounded-full py-3 px-6 pr-16 outline-none text-lg">
                         <button class="absolute right-1.5 top-1/2 -translate-y-1/2 h-10 w-10 bg-elo-dark rounded-full text-white text-xl flex items-center justify-center hover:bg-elo-red transition-colors">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                 </div>
 
-                <div class="flex items-center space-x-4 md:space-x-6 mr-32"> 
+                <div class="flex items-center space-x-4 md:space-x-6 md:mr-32"> 
                     
                     <div class="hidden lg:flex flex-col items-start text-base font-medium">
                         <span class="flex items-center gap-2"><i class="fas fa-phone text-xl"></i>[SEU TELEFONE / SEU WHATSAPP]</span>
@@ -646,56 +646,7 @@
             </div>
         </div>
 
-        <nav class="bg-elo-dark text-white py-3 border-t border-gray-700/50 relative">
-            
-            <button id="scroll-menu-left" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 text-white md:hidden">
-                <i class="fas fa-chevron-left text-2xl"></i>
-            </button>
-
-            <div id="icon-menu-container" class="max-w-7xl mx-auto w-full px-10 md:px-4 mobile-scroll-menu md:justify-center md:flex md:overflow-hidden md:whitespace-normal space-x-1"> 
-                
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-bars text-3xl"></i>
-                    <span class="text-xs font-bold uppercase mt-1">MENU</span>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-umbrella text-3xl"></i>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-headphones text-3xl"></i>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-home text-3xl"></i>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-clipboard-list text-3xl"></i>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <img class="h-8 w-8" src="mochila.png" alt="Mochilas" onerror="this.src='https://placehold.co/32x32/4c0507/FFFFFF?text='; this.style.opacity=0.5;">
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-mug-hot text-3xl"></i>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <img class="h-8 w-8" src="mochila_nova.png" alt="Mochilas" onerror="this.src='https://placehold.co/32x32/4c0507/FFFFFF?text='; this.style.opacity=0.5;">
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-tshirt text-3xl"></i>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <i class="fas fa-book-open text-3xl"></i>
-                    <span class="text-xs font-medium mt-1">Catálogo</span>
-                </a>
-                <a href="#" onclick="return false;" class="flex flex-col items-center justify-center hover:bg-elo-red p-2 rounded-md text-center h-16 px-6"> 
-                    <span class="text-2xl font-bold italic">blog</span>
-                </a>
-            </div>
-
-            <button id="scroll-menu-right" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 text-white md:hidden">
-                <i class="fas fa-chevron-right text-2xl"></i>
-            </button>
-        </nav>
-    </header>
+        </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-8">
 
@@ -705,7 +656,7 @@
                 <div class="carousel-slide active" style="opacity: 1;">
                     <img src="fundo1.png" alt="Black Friday" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1920x312/aa1e1e/FFFFFF?text=BLACK+FRIDAY+EM+BRINDES';">
                     <div class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 p-4">
-                         <h2 class="text-white text-3xl md:text-5xl font-bold uppercase text-center">BLACK FRIDAY EM BRINDES</h2>
+                         <h2 class="text-white text-3xl md:text-5xl font-bold uppercase text-center">[ BANNER 1 ]</h2>
                          <p class="text-white text-lg mt-2">Fale com nosso Assistente de IA</p>
                          <a href="#" onclick="return false;" id="cta-black-friday" class="bg-white text-elo-dark font-bold py-3 px-8 rounded-full text-lg uppercase transition-transform hover:scale-105 mt-6">
                             Falar com Especialista
@@ -714,9 +665,9 @@
                 </div>
 
                 <div class="carousel-slide" style="opacity: 0;">
-                    <img src="fundo2.png" alt="Brindes de Fim de Ano" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1920x312/4c0507/FFFFFF?text=BRINDES+PARA+O+FINAL+DO+ANO';">
+                    <img src="fundo2.png" alt="Impressões de Fim de Ano" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1920x312/4c0507/FFFFFF?text=BRINDES+PARA+O+FINAL+DO+ANO';">
                     <div class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 p-4">
-                         <h2 class="text-white text-3xl md:text-5xl font-bold uppercase text-center">BRINDES PARA O FINAL DO ANO</h2>
+                         <h2 class="text-white text-3xl md:text-5xl font-bold uppercase text-center">[ BANNER 2 ]</h2>
                          <p class="text-white text-lg mt-2">Surpreenda seus clientes e colaboradores!</p>
                          <a href="#" onclick="return false;" class="bg-white text-elo-dark font-bold py-3 px-8 rounded-full text-lg uppercase transition-transform hover:scale-105 mt-6">
                             Ver Catálogo
@@ -748,7 +699,7 @@
                 <span class="flex-grow h-1 bg-gray-300"></span>
                 <div class="flex items-center space-x-3 mx-4">
                     <i class="fas fa-medal text-2xl text-elo-red"></i>
-                    <h2 class="text-2xl font-bold text-gray-800 uppercase">BEST SELLERS</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 uppercase">MAIS VENDIDOS</h2>
                 </div>
                 <span class="flex-grow h-1 bg-gray-300"></span>
             </div>
@@ -756,10 +707,10 @@
             <div class="flex overflow-x-auto space-x-6 pb-4">
                 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="bl120.jpg" alt="Shoulder Bag Luiza" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=BL120';">
+                    <img src="bl120.jpg" alt="Shoulder Bag Luiza" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">BL120</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Shoulder Bag Luiza</h3>
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -767,10 +718,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="ne150.jpg" alt="Necessaire Fabiane" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=NE150';">
+                    <img src="ne150.jpg" alt="Necessaire Fabiane" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">NE150</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Necessaire Fabiane</h3>
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -778,10 +729,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="chp050.jpg" alt="Chapéu em Fibra" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=CHP050';">
+                    <img src="chp050.jpg" alt="Chapéu em Fibra" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">CHP050</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Chapéu em Fibra de Bambu</h3>
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -789,10 +740,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="bd355.jpg" alt="Pochete D" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=BD355';">
+                    <img src="bd355.jpg" alt="Pochete D" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto] ';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">BD355</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Pochete D</h3>
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -800,10 +751,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="xyz789.jpg" alt="Produto 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=XYZ789';">
+                    <img src="xyz789.jpg" alt="Produto 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">XYZ789</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Produto Novo Exemplo</h3>
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -811,38 +762,6 @@
                 </div>
 
             </div>
-        </section>
-
-        <section class="grid grid-cols-12 gap-4 md:gap-6 my-12">
-            
-            <a href="#" onclick="return false;" class="relative col-span-12 md:col-span-8 md:h-80 rounded-lg overflow-hidden shadow-lg group">
-                <img src="banner-kit-brindes.jpg" class="w-full h-auto md:h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/800x400/aa1e1e/FFFFFF?text=Kit+de+Brindes';">
-            </a>
-
-            <a href="#" onclick="return false;" class="relative col-span-12 md:col-span-4 md:h-80 rounded-lg overflow-hidden shadow-lg group">
-                <img src="banner-personalizados.jpg" class="w-full h-auto md:h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/400x400/aa1e1e/FFFFFF?text=Personalizados';">
-            </a>
-
-            <a href="#" onclick="return false;" class="relative col-span-12 md:col-span-4 md:h-80 rounded-lg overflow-hidden shadow-lg group">
-                <img src="banner-sensoriais.jpg" class="w-full h-auto md:h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/400x400/aa1e1e/FFFFFF?text=Sensoriais';">
-            </a>
-
-            <a href="#" onclick="return false;" class="relative col-span-12 md:col-span-4 md:h-80 rounded-lg overflow-hidden shadow-lg group">
-                <img src="banner-pronta-entrega.jpg" class="w-full h-auto md:h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/400x400/aa1e1e/FFFFFF?text=Pronta+Entrega';">
-            </a>
-
-            <a href="#" onclick="return false;" class="relative col-span-12 md:col-span-4 md:h-80 rounded-lg overflow-hidden shadow-lg group">
-                <img src="banner-esportivos.jpg" class="w-full h-auto md:h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/400x400/aa1e1e/FFFFFF?text=Esportivos';">
-            </a>
-
-            <a href="#" onclick="return false;" class="relative col-span-12 md:col-span-8 md:h-80 rounded-lg overflow-hidden shadow-lg group">
-                <img src="banner-tecnologicos.jpg" class="w-full h-auto md:h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/800x400/aa1e1e/FFFFFF?text=Tecnol%C3%B3gicos';">
-            </a>
-
-            <a href="#" onclick="return false;" class="relative col-span-12 md:col-span-4 md:h-80 rounded-lg overflow-hidden shadow-lg group">
-                <img src="banner-ecologicos.jpg" class="w-full h-auto md:h-full object-contain md:object-cover transition-transform duration-500 group-hover:scale-110" onerror="this.src='https://placehold.co/400x400/228B52/FFFFFF?text=Ecol%C3%B3gicos';">
-            </a>
-
         </section>
 
         <section class="mb-12">
@@ -859,10 +778,10 @@
             <div class="flex overflow-x-auto space-x-6 pb-4">
                 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="kb240.jpg" alt="Kit Porta Retrato" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=KB240';">
+                    <img src="kb240.jpg" alt="[SEU PRODUTO]" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
                         <span class="text-gray-500 text-sm">KB240</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Kit Porta Retrato e Copos</h3>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -870,10 +789,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="kb241.jpg" alt="Kit Café" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=KB241';">
+                    <img src="kb241.jpg" alt="[SEU PRODUTO]" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">KB241</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Kit para Café/Chá</h3>
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -881,10 +800,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="kb257.jpg" alt="Kit Petisqueira" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=KB257';">
+                    <img src="kb257.jpg" alt="[SEU PRODUTO]" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">KB257</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Kit Petisqueira e Cerveja</h3>
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -892,10 +811,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="kb258.jpg" alt="Kit Petisco e Vinho" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=KB258';">
+                    <img src="kb258.jpg" alt="[SEU PRODUTO] 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">KB258</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Kit para Petisco e Vinho</h3>
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -903,10 +822,10 @@
                 </div>
 
                 <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
-                    <img src="kb256.jpg" alt="Produto 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=ABC123';">
+                    <img src="kb256.jpg" alt="Produto 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
                     <div class="p-5">
-                        <span class="text-gray-500 text-sm">ABC123</span>
-                        <h3 class="font-semibold text-gray-900 truncate">Produto Novo Exemplo</h3>
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
                         <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
                             Ver Produto
                         </a>
@@ -1050,7 +969,7 @@
 
                 <div class="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
                     <h3 class="text-xl font-bold text-elo-dark mb-2">Qualidade</h3>
-                    <p class="text-gray-600 text-sm mb-4">Brindes de 1ª qualidade</p>
+                    <p class="text-gray-600 text-sm mb-4">[SEUS PRODUTOS] de 1ª qualidade</p>
                     <p class="text-gray-700 text-sm">
                         Trabalhamos com os melhores produtos cuidando sempre da qualidade desde a compra até a entrega.
                     </pos>
@@ -1119,14 +1038,14 @@
                     <i class="fas fa-times"></i>
                 </button>
                 <div class="preview-header">
-                    <div class="preview-avatar">E</div>
+                    <div class="preview-avatar">SG</div>
                     <div class="preview-info">
-                        <strong>ELO<span>bot</span></strong>
+                        <strong>[SUA GRÁFICA]<span>bot</span></strong>
                         <span>Assistente Virtual</span>
                     </div>
                 </div>
                 <div class="preview-message-bubble">
-                    <span id="preview-message-text">Olá! 🔥 Posso te ajudar a encontrar o brinde perfeito?</span>
+                    <span id="preview-message-text">Olá! 🔥 Posso te ajudar a encontrar o [SEU PRODUTO] perfeito?</span>
                 </div>
             </div>
         </div>
@@ -1137,7 +1056,7 @@
                     <i class="fas fa-robot"></i>
                 </div>
                 <div class="chatbot-header-info">
-                    <h3>ELO<span>bot</span></h3>
+                    <h3>[SUA GRÁFICA]<span>bot</span></h3>
                     <p>Assistente Virtual</p>
                 </div>
                 <button class="chatbot-close" id="chatbotClose" aria-label="Fechar chat">
@@ -1271,7 +1190,7 @@
             const heroCtaButton = document.getElementById('cta-black-friday'); 
             const previewMessageEl = document.getElementById('preview-message-text');
 
-            const RENDER_BACKEND_URL = "https://elobrindes-leanttro.onrender.com"; 
+            const RENDER_BACKEND_URL = "https://grafica-chatbot.onrender.com/"; 
 
             // --- Variáveis de ESTADO PRINCIPAL ---
             let leadData = {};
