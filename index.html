@@ -1250,7 +1250,7 @@
             if (minimizedIcon) minimizedIcon.addEventListener('click', maximizePreview);
             if (previewMessageEl) startPreviewAnimation();
 
-            // --- Abrir/Fechar chatbot (MODIFICADO) ---
+            // --- Abrir/Fechar chatbot (MODIFICADO COM NOVA CORREÇÃO) ---
             function toggleChat(e) {
                 if (e) e.preventDefault();
                 const isActive = chatbotWindow.classList.contains('active');
@@ -1260,23 +1260,12 @@
                     minimizedIcon.classList.remove('active');
                     maximizePreview();
                     
-                    // --- INÍCIO DA CORREÇÃO DE ZOOM MOBILE ---
-                    // Isso força o viewport a resetar o zoom em dispositivos móveis
-                    // (especialmente iOS) ao fechar o chat.
-                    try {
-                        const viewportMeta = document.querySelector('meta[name="viewport"]');
-                        if (viewportMeta) {
-                            // 1. Desabilita o zoom do usuário e força a escala 1
-                            viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
-                            
-                            // 2. Re-habilita o zoom do usuário logo em seguida.
-                            // O browser vai "piscar" o viewport e resetar o zoom.
-                            setTimeout(() => {
-                                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
-                            }, 10); // Um delay mínimo é suficiente
-                        }
-                    } catch (err) {
-                        console.warn("Não foi possível resetar o zoom do viewport:", err);
+                    // --- INÍCIO DA CORREÇÃO DE ZOOM V2 ---
+                    // Força o "desfoque" (blur) do campo de input.
+                    // Isso faz o teclado virtual recolher e 
+                    // sinaliza ao iOS para resetar o zoom.
+                    if (chatbotInput) {
+                        chatbotInput.blur();
                     }
                     // --- FIM DA CORREÇÃO ---
 
