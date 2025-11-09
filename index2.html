@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[SUA GRÁFICA] Demo (Black Friday)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'elo-dark': '#242966',
+                        'elo-red': '#242966',
+                        'elo-bg': '#f9f9f9',
+                        'elo-gold': '#FFD700',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS PRÉ-EXISTENTE DO SITE */
+        .carousel-slide {
+            display: none;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .carousel-slide.active {
+            display: block;
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            outline: none;
+            border: none;
+        }
+
+        .carousel-control:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #prev-slide { left: 1rem; }
+        #next-slide { right: 1rem; }
+
+
+        .fas {
+            font-family: "Font Awesome 6 Free" !important;
+            font-weight: 900 !important;
+        }
+        .fab {
+            font-family: "Font Awesome 6 Brands" !important;
+        }
+
+        @keyframes glowing-border {
+            0% { box-shadow: 0 0 0px #FFD700; }
+            50% { box-shadow: 0 0 20px #FFD700; }
+            100% { box-shadow: 0 0 0px #FFD700; }
+        }
+
+        #hero-carousel {
+            animation: glowing-border 4s infinite alternate; 
+        }
+        
+        .mobile-scroll-menu {
+            display: flex;
+            overflow-x: scroll;
+            white-space: nowrap;
+            scrollbar-width: none;
+        }
+
+        .mobile-scroll-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .mobile-scroll-menu a {
+            flex-shrink: 0;
+        }
+        
+        .mobile-scroll-menu::-webkit-scrollbar {
+            height: 8px;
+            display: block;
+        }
+        .mobile-scroll-menu::-webkit-scrollbar-track {
+            background: #242966;
+        }
+        .mobile-scroll-menu::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 4px;
+        }
+
+        .mobile-scroll-menu {
+            scrollbar-color: #FFD700 #242966;
+            scrollbar-width: thin;
+        }
+
+        .accordion-content {
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            max-height: 0;
+        }
+
+        .accordion-content.open {
+            max-height: 2000px;
+        }
+
+        /* ---------------------------------------------------------------------- */
+        /* --- CSS DO CHATBOT (ADAPTAÇÃO PARA TEMA CLARO E COR ELO BRINDES) --- */
+        /* ---------------------------------------------------------------------- */
+
+        :root {
+            /* TEMA CLARO */
+            --bg-color: #FFFFFF; /* Fundo principal: Branco */
+            --dark-gray: #f4f4f4; /* Fundo do chat: Cinza claro */
+            --text-color: #333333; /* Texto principal: Preto escuro */
+            --accent-color: #242966; /* Destaque: Azul [SUA GRÁFICA] */
+            --wrong-color: #dc3545;
+            --font-body: 'Inter', sans-serif;
+            --font-heading: 'Montserrat', sans-serif;
+        }
+        
+        /* 11. Floating Chatbot (PREVIEW) */
+        .floating-chatbot {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            left: 15px;
+            z-index: 9999;
+        }
+
+        /* CONTAINER DO BOTÃO E MINIMIZADO */
+        #chatbotButtonContainer {
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: 0;
+            position: relative; /* Para posicionar o ícone minimizado */
+        }
+
+        /* ESTADO: PREVIEW (Caixa de Notificação) */
+        .chatbot-preview-button {
+            width: 100%;
+            background-color: var(--dark-gray); 
+            border: 1px solid rgba(36, 41, 102, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(36, 41, 102, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        .chatbot-preview-button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 35px rgba(36, 41, 102, 0.6);
+        }
+        
+        /* ESTADO: ATIVO (Quando a Janela Principal está aberta) */
+        .chatbot-preview-button.active {
+            opacity: 0;
+            transform: scale(0.9);
+            visibility: hidden;
+            height: 0;
+            padding: 0;
+        }
+
+        /* Botão X de Fechar/Minimizar dentro da Preview */
+        .preview-close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            color: #777;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 100; /* Acima do conteúdo */
+        }
+        
+        /* ESTADO: MINIMIZED (Ícone de Robô Puro) */
+        .chatbot-minimized-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent-color); /* Azul */
+            border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(36, 41, 102, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #FFFFFF;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.5);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-minimized-icon.minimized {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            animation: none; /* Desliga o pulse */
+        }
+
+        /* Oculta o conteúdo interno da preview */
+        .chatbot-preview-button.minimized {
+            opacity: 0;
+            visibility: hidden;
+            height: 0;
+            padding: 0;
+        }
+
+        /* Ajusta o Botão Minimized quando a Janela Principal está Aberta */
+        .chatbot-minimized-icon.active {
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.5);
+        }
+
+        .preview-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .preview-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .preview-info strong {
+            font-family: var(--font-body);
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+        
+        .preview-info strong span {
+            color: var(--accent-color);
+            text-transform: lowercase;
+        }
+
+        .preview-info span {
+            display: block;
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .preview-message-bubble {
+            background-color: rgba(36, 41, 102, 0.1);
+            border-left: 3px solid var(--accent-color);
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+
+        .preview-message-bubble #preview-message-text {
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 8px 25px rgba(36, 41, 102, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 35px rgba(36, 41, 102, 0.7);
+            }
+        }
+
+        /* Janela Principal do Chatbot (Modal) */
+        .chatbot-window {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            left: 15px;
+            width: calc(100% - 30px);
+            max-width: 400px;
+            height: 70vh;
+            max-height: 550px;
+            background-color: var(--dark-gray);
+            border: 1px solid rgba(36, 41, 102, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9998;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-window.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--accent-color), #1a1d4a);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+
+        .chatbot-header-avatar {
+            width: 45px;
+            height: 45px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .chatbot-header-info h3 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            letter-spacing: 2px;
+            margin-bottom: 0.2rem;
+            color: #FFFFFF;
+            text-transform: uppercase;
+        }
+        
+        .chatbot-header-info h3 span {
+            color: var(--dark-gray);
+            text-transform: lowercase;
+            opacity: 0.8;
+        }
+
+        .chatbot-header-info p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            color: #FFFFFF;
+        }
+
+        .chatbot-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+
+        .chatbot-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background-color: var(--bg-color);
+        }
+
+        .chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+
+        .chatbot-messages::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 0.8rem;
+            max-width: 90%;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            color: #FFFFFF;
+        }
+
+        .message.bot .message-avatar {
+             background: var(--accent-color);
+        }
+
+        .message.user .message-avatar {
+             background-color: #333;
+             color: #FFFFFF;
+        }
+
+        .message-content {
+            max-width: calc(100% - 45px);
+        }
+
+        .message-bubble {
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            color: var(--text-color);
+        }
+        
+        .message.bot .message-bubble {
+            background-color: var(--dark-gray);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message.user .message-bubble {
+            background-color: var(--accent-color);
+            color: #FFFFFF;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #777;
+            margin-top: 0.4rem;
+        }
+        
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        /* Indicador de "digitando" */
+        .typing-indicator {
+            display: flex;
+            gap: 0.3rem;
+            padding: 0.8rem 1rem;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                opacity: 0.3;
+                transform: translateY(0);
+            }
+            30% {
+                opacity: 1;
+                transform: translateY(-8px);
+            }
+        }
+
+        .chatbot-input-area {
+            padding: 1rem;
+            background-color: var(--dark-gray);
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            background-color: #FFFFFF;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 0.8rem 1rem;
+            color: var(--text-color);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-input:focus {
+            border-color: var(--accent-color);
+            background-color: #FFFFFF;
+        }
+
+        .chatbot-input::placeholder {
+            color: #777;
+        }
+
+        .chatbot-send {
+            background: var(--accent-color);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .chatbot-send:hover {
+            transform: scale(1.05);
+            background-color: #1a1d4a;
+        }
+
+        .chatbot-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Media Query para Desktop */
+        @media (min-width: 768px) {
+             #chatbotButtonContainer {
+                max-width: 400px; /* Largura desktop para o container */
+            }
+            .chatbot-window {
+                left: auto;
+                bottom: 120px;
+                right: 30px;
+                width: 400px;
+                height: 550px;
+            }
+            
+            /* Ajusta o posicionamento do ícone minimizado no desktop */
+            .chatbot-minimized-icon {
+                right: 0; 
+                bottom: 0;
+            }
+            
+             /* Garante que o botão preview flua para a direita no desktop */
+             .chatbot-preview-button {
+                margin-left: auto;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body class="bg-elo-bg"> <header class="bg-elo-dark text-white shadow-lg sticky top-0 z-50">
+        
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex items-center justify-between h-24 md:h-28"> 
+                
+                <div class="flex-shrink-0 ml-[2px] md:ml-24"> 
+                    <a id="logo-home" href="#">
+                        <img class="h-[4.5rem] md:h-20" src="elologo.png" alt="[SUA GRÁFICA] Logo" onerror="this.src='https://placehold.co/180x60/4c0507/FFFFFF?text=[SUA+GRAFICA]';">
+                    </a>
+                </div>
+
+                <div class="flex flex-col items-center justify-center text-xs font-medium space-y-1 lg:hidden ml-2">
+                    <span class="flex items-center gap-1"><i class="fas fa-phone text-sm"></i> [seu numero]</span>
+                    <span class="flex items-center gap-1">seuemail@seuemail.com.br</span>
+                </div>
+
+                <div class="hidden md:flex flex-1 justify-start px-2 ml-0"> 
+                    <div class="relative w-full max-w-sm">
+                        <input type="text" placeholder="Buscar produtos.." class="w-full bg-white text-gray-900 rounded-full py-3 px-6 pr-16 outline-none text-lg">
+                        <button class="absolute right-1.5 top-1/2 -translate-y-1/2 h-10 w-10 bg-elo-dark rounded-full text-white text-xl flex items-center justify-center hover:bg-elo-red transition-colors">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4 md:space-x-6 mr-75"> 
+                    
+                    <div class="hidden lg:flex flex-col items-start text-base font-medium">
+                        <span class="flex items-center gap-2"><i class="fas fa-phone text-xl"></i>[SEU TELEFONE / SEU WHATSAPP]</span>
+                        <span class="flex items-center gap-2"><i class="fas fa-envelope text-xl"></i> seuemail@seuemail.com.br</span>
+                    </div>
+
+                    <a href="#" onclick="return false;" class="text-3xl md:text-4xl hover:text-gray-300"> 
+                        <i class="fas fa-shopping-cart"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        </header>
+
+    <main class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <section class="mb-12 relative">
+            <div id="hero-carousel" class="relative w-full shadow-lg rounded-lg overflow-hidden" style="height: 312px;">
+                
+                <div class="carousel-slide active" style="opacity: 1;">
+                    <img src="fundo1.png" alt="Black Friday" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1920x312/aa1e1e/FFFFFF?text=BLACK+FRIDAY+EM+BRINDES';">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 p-4">
+                         <h2 class="text-white text-3xl md:text-5xl font-bold uppercase text-center">[ BANNER 1 ]</h2>
+                         <p class="text-white text-lg mt-2">Fale com nosso Assistente de IA</p>
+                         <a href="#" onclick="return false;" id="cta-black-friday" class="bg-white text-elo-dark font-bold py-3 px-8 rounded-full text-lg uppercase transition-transform hover:scale-105 mt-6">
+                            Falar com Especialista
+                         </a>
+                    </div>
+                </div>
+
+                <div class="carousel-slide" style="opacity: 0;">
+                    <img src="fundo2.png" alt="Impressões de Fim de Ano" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1920x312/4c0507/FFFFFF?text=BRINDES+PARA+O+FINAL+DO+ANO';">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 p-4">
+                         <h2 class="text-white text-3xl md:text-5xl font-bold uppercase text-center">[ BANNER 2 ]</h2>
+                         <p class="text-white text-lg mt-2">Surpreenda seus clientes e colaboradores!</p>
+                         <a href="#" onclick="return false;" class="bg-white text-elo-dark font-bold py-3 px-8 rounded-full text-lg uppercase transition-transform hover:scale-105 mt-6">
+                            Ver Catálogo
+                         </a>
+                    </div>
+                </div>
+
+                <button id="prev-slide" class="carousel-control hidden lg:block">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="next-slide" class="carousel-control hidden lg:block">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <div class="flex justify-center items-center space-x-4 mt-4 lg:hidden">
+                <button id="prev-slide-mobile" class="p-3 bg-elo-dark text-white rounded-full leading-none">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="next-slide-mobile" class="p-3 bg-elo-dark text-white rounded-full leading-none">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            
+            <div class="flex items-center justify-center mb-6">
+                <span class="flex-grow h-1 bg-gray-300"></span>
+                <div class="flex items-center space-x-3 mx-4">
+                    <i class="fas fa-medal text-2xl text-elo-red"></i>
+                    <h2 class="text-2xl font-bold text-gray-800 uppercase">MAIS VENDIDOS</h2>
+                </div>
+                <span class="flex-grow h-1 bg-gray-300"></span>
+            </div>
+
+            <div class="flex overflow-x-auto space-x-6 pb-4">
+                
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="bl120.jpg" alt="Shoulder Bag Luiza" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="ne150.jpg" alt="Necessaire Fabiane" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="chp050.jpg" alt="Chapéu em Fibra" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="bd355.jpg" alt="Pochete D" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto] ';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="xyz789.jpg" alt="Produto 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código]</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="mb-12">
+            
+            <div class="flex items-center justify-center mb-6">
+                <span class="flex-grow h-1 bg-gray-300"></span>
+                <div class="flex items-center space-x-3 mx-4">
+                    <i class="fas fa-rocket text-2xl text-elo-red"></i>
+                    <h2 class="text-2xl font-bold text-gray-800 uppercase">LANÇAMENTOS</h2>
+                </div>
+                <span class="flex-grow h-1 bg-gray-300"></span>
+            </div>
+
+            <div class="flex overflow-x-auto space-x-6 pb-4">
+                
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="kb240.jpg" alt="[SEU PRODUTO]" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">KB240</span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="kb241.jpg" alt="[SEU PRODUTO]" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="kb257.jpg" alt="[SEU PRODUTO]" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="kb258.jpg" alt="[SEU PRODUTO] 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0 w-64 bg-white rounded-lg shadow-md overflow-hidden">
+                    <img src="kb256.jpg" alt="Produto 5" class="w-full h-48 object-cover" onerror="this.src='https://placehold.co/300x300/f0f0f0/ccc?text=[foto produto]';">
+                    <div class="p-5">
+                        <span class="text-gray-500 text-sm">[seu código] </span>
+                        <h3 class="font-semibold text-gray-900 truncate">[SEU PRODUTO]</h3>
+                        <a href="#" onclick="return false;" class="mt-4 inline-block bg-elo-dark text-white text-sm text-center font-bold py-2 px-4 rounded-full w-full hover:bg-elo-red">
+                            Ver Produto
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="flex items-center justify-center mb-6">
+                <span class="flex-grow h-1 bg-gray-300"></span>
+                <div class="flex items-center space-x-3 mx-4">
+                    <i class="fas fa-marker text-2xl text-elo-red"></i>
+                    <h2 class="text-2xl font-bold text-gray-800 uppercase">Tipos de Gravação</h2>
+                </div>
+                <span class="flex-grow h-1 bg-gray-300"></span>
+            </div>
+            
+            <div class="max-w-4xl mx-auto bg-white p-4 md:p-8 rounded-lg shadow-md">
+                <div id="accordion-container" class="space-y-4">
+                    
+                    <div class="border-b border-gray-200">
+                        <button class="accordion-button w-full flex justify-between items-center py-4 text-left text-gray-800 font-semibold text-lg">
+                            <span>Alto-Relevo e Baixo-Relevo (Hot Stamping)</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <p class="pt-2 pb-4 text-gray-700">
+                                O Relevo (seco ou hot stamping) é um processo que usa calor e pressão para criar uma marca afundada (baixo-relevo) ou elevada (alto-relevo) em materiais como couro, sintéticos e papelaria. O Hot Stamping pode adicionar uma película metálica (dourada, prateada) para um acabamento de luxo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border-b border-gray-200">
+                        <button class="accordion-button w-full flex justify-between items-center py-4 text-left text-gray-800 font-semibold text-lg">
+                            <span>Bordado e Apliques</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <p class="pt-2 pb-4 text-gray-700">
+                                Ideal para têxteis (bonés, camisetas, mochilas). O bordado costura o design diretamente no tecido, oferecendo durabilidade e um visual premium. Apliques (patches) podem ser bordados ou emborrachados e costurados ou colados no produto.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-b border-gray-200">
+                        <button class="accordion-button w-full flex justify-between items-center py-4 text-left text-gray-800 font-semibold text-lg">
+                            <span>Gravação a Laser e Impressão Digital</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <p class="pt-2 pb-4 text-gray-700">
+                                O Laser é ideal para metal e madeira, criando marcas precisas e permanentes "queimando" a superfície do material. A Impressão Digital (UV) permite cores ilimitadas e alta definição em superfícies planas ou semi-curvas (canetas, power banks, blocos de nota), com secagem instantânea.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border-b border-gray-200">
+                        <button class="accordion-button w-full flex justify-between items-center py-4 text-left text-gray-800 font-semibold text-lg">
+                            <span>Serigrafia (Silk-Screen) e Tampografia</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <p class="pt-2 pb-4 text-gray-700">
+                                Serigrafia (Silk) é ideal para grandes áreas e tecidos (camisetas, sacolas), usando telas para depositar tinta. Tampografia é perfeita para objetos pequenos e irregulares (canetas, chaveiros), usando um "carimbo" de silicone para transferir a tinta.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="border-b border-gray-200">
+                        <button class="accordion-button w-full flex justify-between items-center py-4 text-left text-gray-800 font-semibold text-lg">
+                            <span>Sublimação, Offset e Cromia</span>
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                        <div class="accordion-content">
+                            <p class="pt-2 pb-4 text-gray-700">
+                                Processos para imagens complexas e coloridas. Sublimação transfere a tinta para o material através do calor (comum em canecas e tecidos de poliéster). Offset e Cromia são métodos de impressão gráfica (como em impressoras) usados para papelaria e materiais planos.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <section class="mb-12">
+            <div class="relative max-w-6xl mx-auto">
+                
+                <button id="scroll-logo-left" class="absolute left-0 -translate-x-4 md:-translate-x-8 top-1/2 -translate-y-1/2 z-10 p-2 text-elo-dark opacity-50 hover:opacity-100">
+                    <i class="fas fa-chevron-left text-3xl"></i>
+                </button>
+
+                <div id="logo-carousel-container" class="flex overflow-x-auto space-x-12 md:space-x-16 px-4 py-8 items-center">
+                    
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-01.png" alt="Logo Cliente 1" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+1';">
+                    </div>
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-02.png" alt="Logo Cliente 2" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+2';">
+                    </div>
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-03.png" alt="Logo Cliente 3" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+3';">
+                    </div>
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-04.png" alt="Logo Cliente 4" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+4';">
+                    </div>
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-05.png" alt="Logo Cliente 5" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+5';">
+                    </div>
+
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-06.png" alt="Logo Cliente 6" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+6';">
+                    </div>
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-07.png" alt="Logo Cliente 7" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+7';">
+                    </div>
+                    <div class="flex-shrink-0">
+                        <img src="logo-cliente-08.png" alt="Logo Cliente 8" class="h-12 md:h-16 object-contain" onerror="this.src='https://placehold.co/150x60/ccc/888?text=CLIENTE+8';">
+                    </div>
+                    
+                </div>
+                
+                <button id="scroll-logo-right" class="absolute right-0 translate-x-4 md:translate-x-8 top-1/2 -translate-y-1/2 z-10 p-2 text-elo-dark opacity-50 hover:opacity-100">
+                    <i class="fas fa-chevron-right text-3xl"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                
+                <div class="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+                    <h3 class="text-xl font-bold text-elo-dark mb-2">Atendimento Especializado</h3>
+                    <p class="text-gray-600 text-sm mb-4">Marketing promocional</p>
+                    <p class="text-gray-700 text-sm">
+                        Excelência no atendimento aos nossos clientes propondo soluções úteis, inovadoras, economicamente viáveis e específicas. Ajudamos você na melhor escolha para sua campanha de marketing, evento ou qualquer ocasião.
+                    </p>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+                    <h3 class="text-xl font-bold text-elo-dark mb-2">Qualidade</h3>
+                    <p class="text-gray-600 text-sm mb-4">[SEUS PRODUTOS] de 1ª qualidade</p>
+                    <p class="text-gray-700 text-sm">
+                        Trabalhamos com os melhores produtos cuidando sempre da qualidade desde a compra até a entrega.
+                    </pos>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+                    <h3 class="text-xl font-bold text-elo-dark mb-2">Logística</h3>
+                    <p class="text-gray-600 text-sm mb-4">Segurança e rapidez</p>
+                    <p class="text-gray-700 text-sm">
+                        Entregamos para todo o território nacional com rapidez e segurança. Fazemos as entregas por transporte aéreo, terrestre ou através dos correios. Para a grande São Paulo e ABC, caso desejado, utilizamos transporte próprio.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white text-gray-600 p-8 mt-12 border-t">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+            
+            <div class="flex flex-wrap justify-center md:justify-start gap-x-4 gap-y-2 text-sm">
+                <a href="#" onclick="return false;" class="hover:text-elo-dark">quem somos</a>
+                <span>|</span>
+                <a href="#" onclick="return false;" class="hover:text-elo-dark">nossos clientes</a>
+                <span>|</span>
+                <a href="#" onclick="return false;" class="hover:text-elo-dark">dúvidas</a>
+                <span>|</span>
+                <a href="#" onclick="return false;" class->trabalhe conosco</a>
+                <span>|</span>
+                <a href="#" onclick="return false;" class="hover:text-elo-dark">política de dados</a>
+            </div>
+
+            <div class="text-sm text-gray-500">
+                2025 © Todos os direitos reservados
+            </div>
+
+            <div class="flex space-x-4">
+                <a href="#" onclick="return false;" class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-elo-red hover:text-white transition-colors">
+                    <i class="fas fa-rss"></i>
+                </a>
+                <a href="#" onclick="return false;" class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-elo-red hover:hover:text-white transition-colors">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" onclick="return false;" class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-elo-red hover:text-white transition-colors">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" onclick="return false;" class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-elo-red hover:text-white transition-colors">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" onclick="return false;" class="h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 hover:bg-elo-red hover:text-white transition-colors">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+
+        </div>
+    </footer>
+    
+    <div class="floating-chatbot">
+        <div id="chatbotButtonContainer">
+             <div class="chatbot-minimized-icon" id="minimizedIcon" aria-label="[SUAGRÁFICA]bot">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="chatbot-preview-button" id="chatbotButton" aria-label="Abrir [SUAGRÁFICA]bot">
+                <button class="preview-close" id="previewClose" aria-label="Minimizar Preview">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="preview-header">
+                    <div class="preview-avatar">SG</div>
+                    <div class="preview-info">
+                        <strong>[SUA GRÁFICA]<span>bot</span></strong>
+                        <span>Assistente Virtual</span>
+                    </div>
+                </div>
+                <div class="preview-message-bubble">
+                    <span id="preview-message-text">Olá! 🔥 Posso te ajudar a encontrar o [SEU PRODUTO] perfeito?</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-header-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chatbot-header-info">
+                    <h3>[SUA GRÁFICA]<span>bot</span></h3>
+                    <p>Assistente Virtual</p>
+                </div>
+                <button class="chatbot-close" id="chatbotClose" aria-label="Fechar chat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="chatbot-messages" id="chatbotMessages">
+                </div>
+
+            <div class="chatbot-input-area">
+                <input 
+                    type="text" 
+                    class="chatbot-input" 
+                    id="chatbotInput" 
+                    placeholder="Digite sua mensagem..."
+                    autocomplete="off"
+                >
+                <button class="chatbot-send" id="chatbotSend" aria-label="Enviar mensagem">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // LÓGICA PRÉ-EXISTENTE DO SITE
+            // (Omitida para breveidade - Copie a lógica do Carrossel, Accordion, etc. do seu arquivo original)
+            
+            (function setupSiteLogic() {
+                const slides = document.querySelectorAll('#hero-carousel .carousel-slide');
+                const prevButton = document.getElementById('prev-slide');
+                const nextButton = document.getElementById('next-slide');
+                const prevButtonMobile = document.getElementById('prev-slide-mobile');
+                const nextButtonMobile = document.getElementById('next-slide-mobile');
+                const logoHome = document.getElementById('logo-home');
+                let currentSlide = 0;
+                let slideInterval;
+                const intervalTime = 8000;
+                function changeSlide(index, resetInterval = true) {
+                    if (resetInterval) clearInterval(slideInterval);
+                    if (index >= slides.length) currentSlide = 0;
+                    else if (index < 0) currentSlide = slides.length - 1;
+                    else currentSlide = index;
+                    slides.forEach((slide, i) => {
+                        slide.style.opacity = (i === currentSlide) ? '1' : '0';
+                        if (i === currentSlide) slide.classList.add('active');
+                        else slide.classList.remove('active');
+                    });
+                    if (resetInterval) startSlideShow();
+                }
+                function nextSlide() { changeSlide(currentSlide + 1, true); }
+                function prevSlide() { changeSlide(currentSlide - 1, true); }
+                function startSlideShow() {
+                    clearInterval(slideInterval);
+                    slideInterval = setInterval(() => { changeSlide(currentSlide + 1, false); }, intervalTime);
+                }
+                if (prevButton && nextButton) {
+                    prevButton.addEventListener('click', prevSlide);
+                    nextButton.addEventListener('click', nextSlide);
+                }
+                if (prevButtonMobile && nextButtonMobile) {
+                    prevButtonMobile.addEventListener('click', prevSlide);
+                    nextButtonMobile.addEventListener('click', nextSlide);
+                }
+                if (logoHome) {
+                    logoHome.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }
+                if (slides.length > 1) startSlideShow();
+                const menuContainer = document.getElementById('icon-menu-container');
+                const scrollLeftBtn = document.getElementById('scroll-menu-left');
+                const scrollRightBtn = document.getElementById('scroll-menu-right');
+                if (menuContainer && scrollLeftBtn && scrollRightBtn) {
+                    const scrollAmount = 150;
+                    scrollLeftBtn.addEventListener('click', function() { menuContainer.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); });
+                    scrollRightBtn.addEventListener('click', function() { menuContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' }); });
+                }
+                const logoContainer = document.getElementById('logo-carousel-container');
+                const logoLeftBtn = document.getElementById('scroll-logo-left');
+                const logoRightBtn = document.getElementById('scroll-logo-right');
+                if (logoContainer && logoLeftBtn && logoRightBtn) {
+                    const logoScrollAmount = 200;
+                    logoLeftBtn.addEventListener('click', function() { logoContainer.scrollBy({ left: -logoScrollAmount, behavior: 'smooth' }); });
+                    logoRightBtn.addEventListener('click', function() { logoContainer.scrollBy({ left: logoScrollAmount, behavior: 'smooth' }); });
+                }
+                const accordionContainer = document.getElementById('accordion-container');
+                if (accordionContainer) {
+                    const buttons = accordionContainer.querySelectorAll('.accordion-button');
+                    function toggleAccordion(button) {
+                        const content = button.nextElementSibling;
+                        const icon = button.querySelector('i');
+                        buttons.forEach(otherButton => {
+                            if (otherButton !== button) {
+                                const otherContent = otherButton.nextElementSibling;
+                                const otherIcon = otherButton.querySelector('i');
+                                otherContent.classList.remove('open');
+                                otherContent.style.maxHeight = null;
+                                otherIcon.classList.remove('rotate-180');
+                            }
+                        });
+                        if (content.classList.contains('open')) {
+                            content.classList.remove('open');
+                            content.style.maxHeight = null;
+                            icon.classList.remove('rotate-180');
+                        } else {
+                            content.classList.add('open');
+                            content.style.maxHeight = content.scrollHeight + "px";
+                            icon.classList.add('rotate-180');
+                        }
+                    }
+                    buttons.forEach(button => { button.addEventListener('click', () => toggleAccordion(button)); });
+                }
+            })();
+
+            // -----------------------------------------------------------
+            // --- INÍCIO: LÓGICA DO CHATBOT ELOBOT (V3 - FUNIL N8N) ---
+            // -----------------------------------------------------------
+
+            const chatbotButton = document.getElementById('chatbotButton');
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            const chatbotClose = document.getElementById('chatbotClose');
+            const chatbotInput = document.getElementById('chatbotInput');
+            const chatbotSend = document.getElementById('chatbotSend');
+            const chatbotMessages = document.getElementById('chatbotMessages');
+            const previewClose = document.getElementById('previewClose');
+            const minimizedIcon = document.getElementById('minimizedIcon');
+            const heroCtaButton = document.getElementById('cta-black-friday'); 
+            const previewMessageEl = document.getElementById('preview-message-text');
+
+            const RENDER_BACKEND_URL = "https://grafica-chatbot.onrender.com/"; 
+
+            // --- Variáveis de ESTADO PRINCIPAL ---
+            let leadData = {};
+            let currentLeadId = null; 
+            let conversationHistory = []; 
+            
+            // --- Variáveis de ESTADO DO FLUXO (ATUALIZADAS) ---
+            let quoteData = {}; // Armazena os dados do orçamento
+            let quoteStep = 0;  // Controla a etapa da coleta do orçamento
+            
+            // (ATUALIZADO) Perguntas do fluxo de orçamento
+            const quoteQuestions = [
+                "Ótimo! Para começar, qual o **produto** que você tem em mente?",
+                "Entendido. E qual a **quantidade** aproximada?",
+                "Perfeito. E para quando você precisa? (Qual o **prazo de entrega**?)",
+                "Certo. Qual o **tipo de gravação** você prefere (Laser, Silk, Bordado, etc)? (Se não souber, digite 'Sugestão')",
+                "Para calcular o frete, qual a **cidade e estado** de entrega? (ex: São Paulo, SP)"
+            ];
+            
+            // Flags de controle de fluxo
+            let isWaitingForQuoteDecision = false; // Esperando "Sim/Não" para orçar
+            let isWaitingForQuoteDetails = false;  // No meio da coleta do orçamento
+            let isWaitingForCnpj = false;           // Na etapa final (CNPJ)
+
+            const previewMessages = [
+                "Olá! 🔥 Posso te ajudar a encontrar o brinde perfeito?",
+                "Clique aqui para um orçamento rápido!",
+                "Temos ofertas de Black Friday!",
+                "Qual o brinde ideal para sua empresa?"
+            ];
+            let messageIndex = 0;
+            let previewInterval;
+
+            // --- Lógica Preview/Minimize (sem mudanças) ---
+            function minimizePreview() {
+                chatbotButton.classList.add('minimized');
+                minimizedIcon.classList.add('minimized');
+                clearInterval(previewInterval);
+            }
+            function maximizePreview() {
+                chatbotButton.classList.remove('minimized');
+                minimizedIcon.classList.remove('minimized');
+                startPreviewAnimation();
+            }
+            function startPreviewAnimation() {
+                 if (previewInterval) clearInterval(previewInterval);
+                 previewInterval = setInterval(() => {
+                    messageIndex = (messageIndex + 1) % previewMessages.length;
+                    previewMessageEl.style.opacity = 0;
+                    setTimeout(() => {
+                        previewMessageEl.textContent = previewMessages[messageIndex];
+                        previewMessageEl.style.opacity = 1;
+                    }, 300);
+                }, 4000);
+            }
+            if (previewClose) previewClose.addEventListener('click', function(e) { e.stopPropagation(); minimizePreview(); });
+            if (minimizedIcon) minimizedIcon.addEventListener('click', maximizePreview);
+            if (previewMessageEl) startPreviewAnimation();
+
+            // --- Abrir/Fechar chatbot (sem mudanças) ---
+            function toggleChat(e) {
+                if (e) e.preventDefault();
+                const isActive = chatbotWindow.classList.contains('active');
+                if (isActive) {
+                    chatbotWindow.classList.remove('active');
+                    chatbotButton.classList.remove('active');
+                    minimizedIcon.classList.remove('active');
+                    maximizePreview();
+                } else {
+                    chatbotWindow.classList.add('active');
+                    chatbotButton.classList.add('active');
+                    minimizedIcon.classList.add('active');
+                    setTimeout(() => {
+                        if (chatbotMessages.children.length === 0) startChat();
+                        chatbotInput.focus();
+                    }, 300);
+                }
+            }
+            if (chatbotButton) chatbotButton.addEventListener('click', toggleChat);
+            if (chatbotClose) chatbotClose.addEventListener('click', toggleChat);
+            if (heroCtaButton) heroCtaButton.addEventListener('click', toggleChat);
+
+            // --- Funções de Suporte ao Chat (ATUALIZADAS) ---
+            function getCurrentTime() {
+                const now = new Date();
+                return now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            }
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+                let formattedText = text.replace(/\n/g, '<br>');
+                formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                
+                // ATUALIZADO: Só salva no histórico de IA se for o chat de coleta
+                // Não salva as perguntas/respostas do fluxo de orçamento ou cnpj
+                if (isUser || (!isWaitingForQuoteDecision && !isWaitingForQuoteDetails && !isWaitingForCnpj)) {
+                    conversationHistory.push({ 
+                        role: isUser ? 'user' : 'bot', 
+                        text: text, // Salva o texto original
+                        time: getCurrentTime()
+                    });
+                }
+
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="fas fa-${isUser ? 'user' : 'robot'}"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">${formattedText}</div>
+                        <div class="message-time">${getCurrentTime()}</div>
+                    </div>
+                `;
+                if (chatbotMessages) {
+                    chatbotMessages.appendChild(messageDiv);
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                }
+            }
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message bot typing-message';
+                typingDiv.id = 'typing-indicator';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar"><i class="fas fa-robot"></i></div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="typing-indicator"><span></span><span></span><span></span></div>
+                        </div>
+                    </div>
+                `;
+                if (chatbotMessages) {
+                    chatbotMessages.appendChild(typingDiv);
+                    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+                }
+            }
+            function removeTypingIndicator() {
+                const typingDiv = document.getElementById('typing-indicator');
+                if (typingDiv && typingDiv.parentNode) {
+                    typingDiv.parentNode.removeChild(typingDiv);
+                }
+            }
+            
+            // --- [LÓGICA DE CONVERSA ATUALIZADA V3] ---
+
+            // (FUNÇÃO ATUALIZADA) Reseta todo o estado
+            function startChat() {
+                // Reseta estado principal
+                leadData = {};
+                conversationHistory = [];
+                currentLeadId = null;
+                
+                // Reseta estado do fluxo
+                quoteData = {};
+                quoteStep = 0;
+                isWaitingForQuoteDecision = false;
+                isWaitingForQuoteDetails = false;
+                isWaitingForCnpj = false;
+                
+                chatbotSend.disabled = false;
+                chatbotInput.placeholder = "Digite seu nome para começar...";
+                chatbotInput.disabled = false;
+
+                // Limpa mensagens antigas
+                while (chatbotMessages.children.length > 0) {
+                    chatbotMessages.removeChild(chatbotMessages.lastChild);
+                }
+                
+                const firstMessage = "Olá! Sou o assistente de IA da [SUA GRÁFICA] . Estou pronto para te ajudar. Para começar, qual seu nome?";
+                showTypingIndicator();
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    addMessage(firstMessage, false);
+                }, 1000);
+            }
+            
+            // (FUNÇÃO ATUALIZADA) Salva o CNPJ final
+            async function saveFinalLead(cnpj) {
+                chatbotInput.placeholder = "Salvando...";
+                chatbotSend.disabled = true; 
+                chatbotInput.disabled = true;
+                
+                leadData['cnpj_fornecido'] = cnpj;
+                
+                // Adiciona a resposta do CNPJ ao histórico final
+                conversationHistory.push({ role: 'user', text: cnpj, time: getCurrentTime() });
+                
+                const payload = { 
+                    ...leadData, 
+                    lead_id: currentLeadId, 
+                    historico_chat: conversationHistory // Envia o histórico completo
+                };
+                
+                try {
+                    const saveResponse = await fetch(`${RENDER_BACKEND_URL}/api/save-lead`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!saveResponse.ok) {
+                        const errData = await saveResponse.json();
+                        throw new Error(errData.error || "Não foi possível salvar a atualização final.");
+                    }
+                    
+                    console.log("Lead final salvo com CNPJ.");
+                    addMessage("Entendido. Seus dados foram salvos! Nossa equipe já recebeu todas as informações e entrará em contato em breve. Obrigado!", false);
+                    chatbotInput.placeholder = "Conversa finalizada.";
+                
+                } catch (err) {
+                    console.error("Erro ao salvar lead final:", err);
+                    addMessage("Ocorreu um erro ao salvar sua última informação, mas não se preocupe, o principal foi salvo.", false);
+                }
+            }
+
+            // (FUNÇÃO ATUALIZADA) Roda a IA, salva a isca (NÃO MOSTRA) e pergunta sobre orçamento
+            async function generateAndSaveIsca() {
+                showTypingIndicator();
+                addMessage("Perfeito! Estou analisando seu perfil para gerar sua lista de brindes...", false);
+                
+                try {
+                    const recomResponse = await fetch(`${RENDER_BACKEND_URL}/api/generate-recommendations`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            lead_id: currentLeadId,
+                            ramo: leadData.empresa_ramo
+                        })
+                    });
+                    
+                    const recomResult = await recomResponse.json();
+                    if (!recomResponse.ok) { 
+                        throw new Error(recomResult.error || "Não foi possível gerar as recomendações.");
+                    }
+
+                    removeTypingIndicator();
+                    // --- MUDANÇA CRÍTICA ---
+                    // NÃO MOSTRA A ISCA. Avisa que será enviada por e-mail.
+                    const nome = leadData.nome ? leadData.nome.split(' ')[0] : 'você'; // Pega o primeiro nome
+                    addMessage(`Pronto, ${nome}! Nossos especialistas já estão com seu perfil. Você receberá um e-mail com 5 ideias de brindes personalizadas em breve.`, false);
+                    
+                    // Agora, inicia o fluxo de orçamento
+                    setTimeout(() => {
+                        addMessage("Enquanto isso... **gostaria de adiantar um orçamento** sem compromisso? (Responda Sim ou Não)", false);
+                        isWaitingForQuoteDecision = true; // Seta a flag
+                        chatbotSend.disabled = false;
+                        chatbotInput.focus();
+                    }, 1000);
+
+                } catch (err) {
+                    removeTypingIndicator();
+                    console.error("Erro ao gerar isca:", err);
+                    addMessage(`Ocorreu um erro ao gerar suas recomendações. (Detalhe: ${err.message})`, false);
+                    
+                    // Mesmo com erro, pergunta sobre orçamento
+                    setTimeout(() => {
+                        addMessage("Gostaria de solicitar um orçamento mesmo assim? (Responda Sim ou Não)", false);
+                        isWaitingForQuoteDecision = true;
+                        chatbotSend.disabled = false;
+                        chatbotInput.focus();
+                    }, 1000);
+                }
+            }
+            
+            // (FUNÇÃO ATUALIZADA) Lógica principal do chat (roteador)
+            async function sendMessage() {
+                const messageText = chatbotInput.value.trim();
+                if (messageText === '' || chatbotSend.disabled) return;
+
+                addMessage(messageText, true); 
+                chatbotInput.value = '';
+                chatbotSend.disabled = true; // Desabilita enquanto processa
+                
+                try {
+                    // --- ROTA 1: Coleta de Orçamento ---
+                    if (isWaitingForQuoteDetails) {
+                        await handleQuoteLogic(messageText);
+                    
+                    // --- ROTA 2: Decisão de Orçamento ---
+                    } else if (isWaitingForQuoteDecision) {
+                        isWaitingForQuoteDecision = false;
+                        if (messageText.toLowerCase().startsWith('s')) {
+                            // Usuário quer orçar
+                            isWaitingForQuoteDetails = true;
+                            quoteStep = 0;
+                            quoteData = {};
+                            addMessage(quoteQuestions[quoteStep], false);
+                            chatbotSend.disabled = false;
+                        } else {
+                            // Usuário não quer orçar. Pula para o CNPJ.
+                            addMessage("Sem problemas. Para fechar: a [SUA GRÁFICA] vende apenas para CNPJ. Você já tem um CNPJ para agilizar o atendimento? (Responda Sim ou Não)", false);
+                            isWaitingForCnpj = true;
+                            chatbotSend.disabled = false;
+                        }
+                    
+                    // --- ROTA 3: Coleta de CNPJ ---
+                    } else if (isWaitingForCnpj) {
+                        isWaitingForCnpj = false;
+                        await saveFinalLead(messageText); // Salva o CNPJ e finaliza
+                    
+                    // --- ROTA 4: Coleta de Dados da IA ---
+                    } else {
+                        await handleChatLogic(messageText);
+                    }
+                
+                } catch (err) {
+                    removeTypingIndicator();
+                    console.error("Erro no fluxo principal de chat:", err);
+                    addMessage(`Ocorreu um erro. 😥 Por favor, tente novamente. (Detalhe: ${err.message})`, false);
+                    chatbotSend.disabled = false; // Reabilita em caso de erro
+                    chatbotInput.focus();
+                }
+            }
+            
+            // (NOVA FUNÇÃO) Roteador da IA
+            async function handleChatLogic() {
+                showTypingIndicator();
+                
+                const response = await fetch(`${RENDER_BACKEND_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        conversationHistory: conversationHistory, // Envia o histórico completo
+                        leadData: leadData, 
+                        leadId: currentLeadId 
+                    })
+                });
+                
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || "Erro na API do chat.");
+                
+                removeTypingIndicator();
+                addMessage(result.botResponse, false);
+
+                // Atualiza o estado local
+                leadData = result.leadData;
+                currentLeadId = result.leadId;
+                
+                console.log("Lead data atualizado:", leadData);
+                console.log("Lead ID atual:", currentLeadId);
+                
+                // A IA disse que coletou tudo (6/6)?
+                if (result.isComplete) {
+                    // Sim! Hora de gerar a ISCA (que não será mostrada)
+                    await generateAndSaveIsca();
+                    // O botão de envio será reabilitado pela função acima
+                } else {
+                    // Não, a conversa continua
+                    chatbotSend.disabled = false;
+                    chatbotInput.focus();
+                }
+            }
+
+            // (NOVA FUNÇÃO) Roteador do Orçamento
+            async function handleQuoteLogic(messageText) {
+                // Salva a resposta atual
+                const currentQuestionKey = [
+                    'produto_desejado', 'quantidade_estimada', 'prazo_entrega', 
+                    'tipo_de_gravacao', 'cidade_entrega'
+                ][quoteStep];
+                
+                // Lógica para tratar "cidade, estado"
+                if (currentQuestionKey === 'cidade_entrega') {
+                    const parts = messageText.split(',');
+                    quoteData['cidade_entrega'] = parts[0] ? parts[0].trim() : 'Não informado';
+                    quoteData['estado_entrega'] = parts[1] ? parts[1].trim() : 'Não informado';
+                } else {
+                    quoteData[currentQuestionKey] = messageText;
+                }
+
+                quoteStep++; // Avança para a próxima pergunta
+
+                if (quoteStep < quoteQuestions.length) {
+                    // Ainda tem perguntas
+                    addMessage(quoteQuestions[quoteStep], false);
+                    chatbotSend.disabled = false;
+                } else {
+                    // Acabou! Salva o orçamento
+                    isWaitingForQuoteDetails = false;
+                    showTypingIndicator();
+                    
+                    try {
+                        const quoteResponse = await fetch(`${RENDER_BACKEND_URL}/api/save-quote`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ 
+                                lead_id: currentLeadId, 
+                                quote_data: quoteData 
+                            })
+                        });
+                        const quoteResult = await quoteResponse.json();
+                        if (!quoteResponse.ok) throw new Error(quoteResult.error || "Não foi possível salvar orçamento.");
+
+                        removeTypingIndicator();
+                        addMessage("✅ Orçamento anotado! Nossa equipe de vendas já foi acionada.", false);
+                        
+                        // Agora, VAI para o CNPJ
+                        setTimeout(() => {
+                            addMessage("Para fechar: a [SUA GRÁFICA] vende apenas para CNPJ. Você já tem um CNPJ para agilizar o atendimento? (Responda Sim ou Não)", false);
+                            isWaitingForCnpj = true;
+                            chatbotSend.disabled = false;
+                        }, 1000);
+
+                    } catch (err) {
+                        removeTypingIndicator();
+                        console.error("Erro ao salvar orçamento:", err);
+                        addMessage("Ocorreu um erro ao salvar seu orçamento. Vamos pular para a próxima etapa.", false);
+                        
+                        // Pula para o CNPJ mesmo com erro
+                        setTimeout(() => {
+                            addMessage("Para fechar: a [SUA GRÁFICA] vende apenas para CNPJ. Você já tem um CNPJ para agilizar o atendimento? (Responda Sim ou Não)", false);
+                            isWaitingForCnpj = true;
+                            chatbotSend.disabled = false;
+                        }, 1000);
+                    }
+                }
+            }
+
+            // --- FIM DA LÓGICA DE CONVERSA ---
+
+            if (chatbotSend) chatbotSend.addEventListener('click', sendMessage);
+            if (chatbotInput) chatbotInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // --- FIM: LÓGICA DO CHATBOT ELOBOT V3 ---
+            // -----------------------------------------------------------
+
+        });
+    </script>
+
+</body>
+</html>
